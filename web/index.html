@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DetailFlow Web App</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <h1 class="title">DetailFlow</h1>
+      <div id="dataModePill" class="pill">Loading...</div>
+    </header>
+
+    <nav class="tabs">
+      <button class="active" data-screen="book">Book</button>
+      <button data-screen="jobs">Live Job</button>
+      <button data-screen="garage">Garage</button>
+      <button data-screen="referral">Referral</button>
+      <button data-screen="admin">Data</button>
+    </nav>
+
+    <section id="screen-book" class="screen"></section>
+    <section id="screen-jobs" class="screen hidden"></section>
+    <section id="screen-garage" class="screen hidden"></section>
+    <section id="screen-referral" class="screen hidden"></section>
+    <section id="screen-admin" class="screen hidden"></section>
+  </main>
+
+  <script src="./env.js"></script>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
