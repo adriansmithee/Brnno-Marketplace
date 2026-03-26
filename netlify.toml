@@ -4,6 +4,7 @@
 
 [build.environment]
   NODE_VERSION = "20"
+    SECRETS_SCAN_OMIT_PATHS = "web/env.js"
 
 [[headers]]
   for = "/*"
