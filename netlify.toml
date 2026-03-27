@@ -1,15 +1,6 @@
 [build]
-  command = "printf 'window.__APP_ENV__={SUPABASE_URL:\"%s\",SUPABASE_ANON_KEY:\"%s\"};\n' \"$SUPABASE_URL\" \"$SUPABASE_ANON_KEY\" > web/env.js"
-  publish = "web"
+  publish = "web/"
 
 [build.environment]
-  NODE_VERSION = "20"
-    SECRETS_SCAN_OMIT_PATHS = "web/env.js"
-
-[[headers]]
-  for = "/*"
-  [headers.values]
-    X-Frame-Options = "DENY"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(self)"
+  SECRETS_SCAN_OMIT_PATHS = "web/index.html"
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_ANON_KEY"
