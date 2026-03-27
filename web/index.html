@@ -1075,10 +1075,8 @@ const S = {
     S.user=user;
     try{ const{data}=await db.from('profiles').select('*').eq('id',user.id).single(); S.profile=data; }catch{}
     try{ const{data}=await db.from('vehicles').select('*').eq('user_id',user.id); S.vehicles=data||[]; }catch{}
-    show('home');
-  } else {
-    show('auth');
   }
+  show('home');
 })();
 
 // ─── SCREENS ───
