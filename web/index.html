@@ -892,7 +892,7 @@ html,body{height:100%;font-family:var(--f);background:var(--bg);color:var(--ink)
     <div class="hero-top">
       <div class="brnno-logo">Brnno</div>
       <div class="hero-top-right">
-        <button class="auth-link" onclick="goAuth()">Log in</button>
+        <button class="auth-link" onclick="goAuth()" id="hero-login-btn" style="display:none">Log in</button>
       </div>
     </div>
   </div>
@@ -1118,7 +1118,43 @@ window.doAuth = async() => {
     updateDashAv(); show('home');
   }catch(e){errEl.textContent=e.message;}
 };
-window.guestMode = () => {
+window.showCreateAccountPrompt = () => {
+    const body = document.getElementById('book-body');
+    const footer = document.getElementById('book-footer');
+    show('book');
+    document.getElementById('prog-fill').style.width = '100%';
+    document.getElementById('step-ctr').textContent = 'Almost done';
+    body.innerHTML = `<div class="step-eyebrow fade">One last thing</div>
+    <div class="step-h fade">Save your booking</div>
+    <div class="step-sub fade">Create a free account to track your detail, chat with your detailer, and rebook in one tap.</div>
+    <input type="email" id="sa-email" class="auth-inp" placeholder="Email address" style="margin-bottom:10px"/>
+    <input type="password" id="sa-pw" class="auth-inp" placeholder="Create a password" style="margin-bottom:10px"/>
+    <input type="text" id="sa-first" class="auth-inp" placeholder="First name" style="margin-bottom:10px"/>
+    <div class="auth-err" id="sa-err"></div>
+    <div style="background:var(--brand-l);border-radius:var(--rs);padding:12px 14px;font-size:12px;color:var(--brand-d);margin-bottom:4px">
+      ✓ Your booking is confirmed — this just saves it to your account
+    </div>`;
+    footer.innerHTML = `<button class="btn-next" onclick="doCreateAccount()">Create account & track booking →</button>
+    <button class="btn-secondary" onclick="skipAccount()">Skip — continue as guest</button>`;
+  };
+  window.doCreateAccount = async () => {
+    const email = document.getElementById('sa-email')?.value.trim();
+    const pw = document.getElementById('sa-pw')?.value;
+    const first = document.getElementById('sa-first')?.value.trim();
+    const errEl = document.getElementById('sa-err');
+    if(!email||!pw||!first){errEl.textContent='Fill in all fields';return;}
+    errEl.textContent='Creating account...';
+    if(isLive){
+      try{
+        const res = await signUp(email, pw, first, '');
+        if(res.error){errEl.textContent=res.error.message;return;}
+        state.user = res.data?.user;
+        if(state.user){ state.profile = await getProfile(state.user.id); }
+      }catch(e){errEl.textContent=e.message;return;}
+    }
+    updateDashAv(); show('dash'); dashTab('track');
+  };
+  window.guestMode = () => {
   S.profile={first_name:'Guest',referral_code:'BRNNO8142',referral_credits:20};
   S.vehicles=DEMO_VEHICLES;
   updateDashAv(); show('home');
@@ -1427,7 +1463,14 @@ function s4(body,footer){
   footer.innerHTML=`<button class="btn-next" onclick="goDash()">View live tracking →</button>`;
 }
 window.acceptUpsell=()=>{ document.getElementById('upsell-box').innerHTML='<div class="info-box" style="background:var(--green-l);color:var(--green);border-color:#A7F3D0">✓ Paint decontamination added!</div>'; };
-window.goDash=()=>{ updateDashAv(); show('dash'); dashTab('track'); };
+window.goDash=()=>{ 
+    if(!state.user && !state.isGuest) {
+      showCreateAccountPrompt();
+    } else {
+      updateDashAv(); show('dash'); dashTab('track');
+    }
+  };
+  window.skipAccount=()=>{ state.isGuest=true; updateDashAv(); show('dash'); dashTab('track'); };
 
 // ─── ADD VEHICLE ───
 window.addVehicle=()=>{
